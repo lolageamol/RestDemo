@@ -72,5 +72,20 @@ public class TestPlanRunsAPI extends BaseAPITest {
 		//Assert.assertEquals( user1.getName() ,actualUser.getName());
 		Assert.assertNotNull(actualUser.getCreatedAt());
 	}
+	
+	@Test
+	public void responseTime() throws JsonProcessingException {
+		
+		User user1 = new User("Amol" , "QA");
+		ObjectMapper om = new ObjectMapper();
+		
+		
+		requestSpec.body(om.writeValueAsString(user1));
+		response = given(requestSpec).request(Method.POST, "/users");
+		response.prettyPrint();
+		response.getTimeIn(TimeUnit.MILLISECONDS);
+		
+		response.then().and().time(lessThan(500L));
+	}
 
 }
